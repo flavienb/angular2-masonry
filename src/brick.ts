@@ -4,6 +4,7 @@ interface MutationWindow extends Window {
 }
 
 declare var window: MutationWindow;
+declare var $:any;
 
 import {
     Directive,
@@ -28,7 +29,9 @@ export class AngularMasonryBrick implements OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         this._parent.add(this._element.nativeElement);
-        this.watchForHtmlChanges();
+        if ($(this._element.nativeElement).data('uploading') == 1) {
+            this.watchForHtmlChanges();
+        }
     }
 
     ngOnDestroy() {
@@ -44,13 +47,13 @@ export class AngularMasonryBrick implements OnDestroy, AfterViewInit {
             let self = this;
             let observer = new MutationObserver(function(mutations, observerFromElement) {
                 self._parent.layout();
+                observer.disconnect();
             });
 
             // define what element should be observed by the observer
             // and what types of mutations trigger the callback
             observer.observe(this._element.nativeElement, {
-                subtree: true,
-                childList: true
+                attributeFilter:['data-uploading']
             });
         }
     }

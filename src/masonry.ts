@@ -1,5 +1,6 @@
 declare var require: any;
 declare var imagesLoaded: any;
+declare var $:any;
 
 import {
     Component,
@@ -96,16 +97,14 @@ export class AngularMasonry implements OnInit, OnDestroy {
 
         if (this.useImagesLoaded) {
             imagesLoaded(element, (instance: any) => {
-                this._element.nativeElement.appendChild(element);
-                
-                // Tell Masonry that a child element has been added
-                this._msnry.appended(element);
+                $(element).css('visibility','visible');
 
                 // layout if first item
                 if(isFirstItem) this.layout();
             });
 
-            this._element.nativeElement.removeChild(element);
+            this._msnry.appended(element);
+            $(element).css('visibility','hidden');
         }
         else {
             // Tell Masonry that a child element has been added
